@@ -11,8 +11,11 @@ import {NgxsModule} from "@ngxs/store";
 import {GeoDataState} from "./+state/state";
 import {environment} from "../environments/environment";
 import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
-import {TuiAxesModule, TuiLineChartModule} from "@taiga-ui/addon-charts";
+import {PlotlyModule} from "angular-plotly.js";
+import * as PlotlyJS from 'plotly.js-dist-min';
 
+
+PlotlyModule.plotlyjs = PlotlyJS;
 
 @NgModule({
   declarations: [
@@ -29,8 +32,7 @@ import {TuiAxesModule, TuiLineChartModule} from "@taiga-ui/addon-charts";
     }),
     NgxsReduxDevtoolsPluginModule.forRoot(),
     BrowserAnimationsModule,
-    TuiLineChartModule,
-    TuiAxesModule
+    PlotlyModule
   ],
   providers: [],
   bootstrap: [AppComponent]

@@ -1,27 +1,33 @@
-import {Component, OnInit} from '@angular/core';
-import {Select} from "@ngxs/store";
-import {GeoDataState} from "../+state/state";
-import {Observable} from "rxjs";
+import {ChangeDetectionStrategy, Component, Input, OnInit} from '@angular/core';
+import {Plotly} from "angular-plotly.js/lib/plotly.interface";
 
 
 @Component({
   selector: 'app-elevation-chart',
   templateUrl: './elevation-chart.component.html',
-  styleUrls: ['./elevation-chart.component.scss']
+  styleUrls: ['./elevation-chart.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ElevationChartComponent implements OnInit {
-  value: [number, number][] = [[0,0]];
+  @Input() paths: [number, number][];
+  chartData: Plotly.Data;
 
+  constructor() {}
 
-  constructor() { }
+  ngOnInit() {
 
-  ngOnInit(): void {
-
-    this.elevationPoints$.subscribe(
-      res => this.value = res
-    )
   }
-
-  @Select(GeoDataState.elevationPoints) elevationPoints$: Observable<[number, number][]>
+  ngOnChanges() {
+    if(this.paths){
+    this.chartData = {
+      data: [{
+        x: this.paths.map((e) => e[0]),
+        y: this.paths.map((e) => e[1]),
+        type: 'scatter]'
+      }],
+      layout: {title: 'Highlighted Elevation Data'}
+    }
+    }
+  }
 
 }

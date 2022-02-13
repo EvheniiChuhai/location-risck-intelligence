@@ -1,4 +1,4 @@
 <button #requestElevation>Request Elevation Data</button>
-<app-elevation-chart></app-elevation-chart>
+<app-elevation-chart [paths]="(paths$ | async)!"></app-elevation-chart>
 <app-average-elevation></app-average-elevation>
 <app-max-elevation></app-max-elevation>

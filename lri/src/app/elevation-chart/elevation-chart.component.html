@@ -1,7 +1,6 @@
-<tui-axes class="axes" [verticalLines]="4" [horizontalLines]="2">
-<tui-line-chart
-[width]="60000"
-[height]="1800"
-  [value]="value"
-></tui-line-chart>
-</tui-axes>
+
+<plotly-plot
+  [data]="chartData.data"
+  [layout]="chartData.layout"
+></plotly-plot>
+

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import {ChangeDetectionStrategy, Component, OnInit} from '@angular/core';
 import {Select} from "@ngxs/store";
 import {GeoDataState} from "../+state/state";
 import {Observable} from "rxjs";
@@ -6,7 +6,8 @@ import {Observable} from "rxjs";
 @Component({
   selector: 'app-average-elevation',
   templateUrl: './average-elevation.component.html',
-  styleUrls: ['./average-elevation.component.scss']
+  styleUrls: ['./average-elevation.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AverageElevationComponent implements OnInit {
 

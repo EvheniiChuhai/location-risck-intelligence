@@ -1,6 +1,6 @@
 import {Injectable} from '@angular/core';
 import {HttpClient} from "@angular/common/http";
-import {GeoDataState} from "./+state/state";
+import {GeoData} from "./+state/state";
 import {Observable} from "rxjs";
 
 @Injectable({
@@ -21,7 +21,7 @@ D%7D%2C%22attributes%22%3A%7B%22OID%22%3A1%7D%7D%5D%2C%22sr%22%3A%7B%22wkid%22%3
   constructor(private http: HttpClient) {
   }
 
-  getGeoData(): Observable<GeoDataState> {
-    return this.http.get<GeoDataState>(this.geoDataUrl);
+  getGeoData(): Observable<GeoData> {
+    return this.http.get<GeoData>(this.geoDataUrl);
   }
 }

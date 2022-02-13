@@ -59,10 +59,18 @@ export interface GeoData {
   messages: any[];
 }
 
+export interface GeoDataStateModel {
+  paths: [number, number][];
+  profileLength: number;
+}
 
-@State<GeoData>({
+
+@State<GeoDataStateModel>({
   name: 'GeoData',
-  defaults: {} as GeoData
+  defaults: {
+    paths: [[0,0]],
+    profileLength: 6000,
+  }
 })
 @Injectable()
 export class GeoDataState {
@@ -71,31 +79,48 @@ export class GeoDataState {
   }
 
   @Selector()
-  static elevationPoints(state: GeoData): [number, number][] {
-    return state.results[0].value.features[0].geometry.paths[0].map((pointArr) =>
-      [pointArr[3], pointArr[2]]);
+  static elevationPoints(state: GeoDataStateModel):  number[] {
+    return state.paths.map((pointArr) => pointArr[1]);
   }
 
   @Selector()
-  static averageElevation(state: GeoData): number {
-    const paths = state.results[0].value.features[0].geometry.paths[0]
-    const averageElevation = paths.reduce((accumulator, value) => accumulator + value[2], 0)
-    return averageElevation / paths.length;
+  static paths(state: GeoDataStateModel): [number, number][] {
+    return state.paths;
   }
 
   @Selector()
-  static maxElevation(state: GeoData): number {
-    const paths = state.results[0].value.features[0].geometry.paths[0].map((pointsArr) => pointsArr[2])
-    return paths.reduce((accumulator, currentValue) => accumulator > currentValue ? accumulator : currentValue)
+  static distancePoints(state: GeoDataStateModel): number[] {
+    return state.paths.map((pointArr) => pointArr[0]);
+  }
+
+  @Selector()
+  static maxDistance(state: GeoDataStateModel): number {
+    return state.profileLength;
+  }
+
+  @Selector()
+  static averageElevation(state: GeoDataStateModel): number {
+    const averageElevation = state.paths.reduce((accumulator, value) => accumulator + value[1], 0);
+    return averageElevation / state.paths.length;
+  }
+
+  @Selector()
+  static maxElevation(state: GeoDataStateModel): number {
+    const paths = state.paths.map((pointsArr) => pointsArr[1]);
+    return paths.reduce((accumulator, currentValue) => accumulator > currentValue ? accumulator : currentValue);
 
   }
 
-  @Action(LoadGeoData, { cancelUncompleted: true })
-  loadGeoData({patchState}: StateContext<GeoDataState>) {
+  @Action(LoadGeoData, {cancelUncompleted: true})
+  loadGeoData(ctx: StateContext<GeoDataStateModel>) {
 
     return this.geoService.getGeoData().pipe(
       tap((geoData) => {
-        patchState({...geoData});
+        const state = ctx.getState();
+        const paths: [number, number][] = geoData.results[0].value.features[0].geometry.paths[0].map((pointArr) =>
+          [pointArr[3], pointArr[2]]);
+        const profileLength = geoData.results[0].value.features[0].attributes.ProfileLength;
+        ctx.setState({...state, paths, profileLength});
       })
     )
   }
